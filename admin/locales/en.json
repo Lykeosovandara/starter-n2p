@@ -1,0 +1,10 @@
+{
+    "login": "Login",
+    "password": "Password",
+    "username": "Username",
+    "phoneNumber": "Phone Number",
+    "validation": {
+        "is_required": "{field} is required"
+    },
+    "dashboard": "Dashboard"
+}
