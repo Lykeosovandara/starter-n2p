@@ -4,16 +4,10 @@ services:
     build: 
       context: ./admin
     volumes:
-      - ./admin/pages:/usr/src/app/pages
-      - ./admin/assets:/usr/src/app/assets
-      - ./admin/locales:/usr/src/app/locales
-      - ./admin/server:/usr/src/app/server
-      - ./admin/stores:/usr/src/app/stores
-      - ./admin/models:/usr/src/app/models
-      - ./admin/api:/usr/src/app/api
-      - ./admin/layouts:/usr/src/app/layouts
+      - ./admin/src/:/usr/src/app/src/
+      - ./admin/tailwind.config.js/:/usr/src/app/tailwind.config.js
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
     ports:
       - 3000:3000
     depends_on:

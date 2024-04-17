@@ -6,6 +6,7 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { User } from 'src/users/entities/user.entity';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import * as qr from 'qrcode';
+import { Role } from './role.enum';
 
 @Injectable()
 export class AuthService {
@@ -15,6 +16,27 @@ export class AuthService {
   ) {}
 
   async signIn(username: string, pass: string): Promise<any> {
+    // check for user have one in db
+    const exist = await this.usersService.isUserExist();
+
+    console.log('exist', exist);
+
+    if (!exist) {
+      const user = await this.register(
+        {
+          userName: username,
+          password: pass,
+          role: Role.Admin,
+        },
+        0,
+      );
+
+      const payload = { sub: user.id, username: user.userName };
+      return {
+        accessToken: await this.jwtService.signAsync(payload),
+      };
+    }
+
     const user = await this.usersService.findOneByUsername(username);
 
     if (!user) {
@@ -29,8 +51,9 @@ export class AuthService {
       throw new UnauthorizedException();
     }
     const payload = { sub: id, username: userName, role: role };
+
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      accessToken: await this.jwtService.signAsync(payload),
     };
   }
 
@@ -49,7 +72,7 @@ export class AuthService {
     }
     const payload = { sub: user.id, username: user.userName };
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      accessToken: await this.jwtService.signAsync(payload),
     };
   }
 
@@ -75,7 +98,7 @@ export class AuthService {
     });
     const qrCode = await this.generateQr(token);
     return {
-      access_token: token,
+      accessToken: token,
       qrCode,
     };
   }
@@ -104,7 +127,7 @@ export class AuthService {
     id: number,
     mobileInfo: string,
   ): Promise<{
-    access_token: string;
+    accessToken: string;
     qrCode: string;
   }> {
     await this.usersService.addMobileInfo(id, mobileInfo);

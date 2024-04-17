@@ -7,7 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 
 import db from './config/db';
-
+import { User } from './users/entities/user.entity';
 
 @Module({
   imports: [
@@ -20,7 +20,7 @@ import db from './config/db';
       synchronize: true,
       host: db().database.host,
       logging: false,
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
+      entities: [User],
     }),
     JwtModule.register({
       global: true,
@@ -33,4 +33,4 @@ import db from './config/db';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

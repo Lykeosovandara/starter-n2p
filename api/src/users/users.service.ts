@@ -16,14 +16,18 @@ export class UsersService {
 
   async create(
     createUserDto: CreateUserDto,
-    createdById: number,
+    createdById?: number,
   ): Promise<User> {
     // find user by id
-    const createdBy = await this.findOne(createdById);
+    let createdBy: User;
 
-    // if user not found, throw error
-    if (!createdBy) {
-      throw new Error('User not found');
+    if (createdById) {
+      createdBy = await this.findOne(createdById);
+
+      // if user not found, throw error
+      if (!createdBy) {
+        throw new Error('User not found');
+      }
     }
 
     createUserDto.profilePicture = this.randomImageUrl();
@@ -123,5 +127,14 @@ export class UsersService {
 
     const randomIndex = Math.floor(Math.random() * urls.length);
     return urls[randomIndex];
+  }
+
+  /// check if user exist in db
+  async isUserExist(): Promise<boolean> {
+    const user = await this.userRepository.find({
+      take: 1,
+    });
+
+    return user.length > 0;
   }
 }

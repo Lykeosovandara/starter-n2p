@@ -1,15 +1,17 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    "./components/**/*.{js,vue,ts}",
-    "./layouts/**/*.vue",
-    "./pages/**/*.vue",
+    "./src/components/**/*.{js,vue,ts}",
+    "./src/layouts/**/*.vue",
+    "./src/pages/**/*.vue",
+    "./src/app.vue",
     "./plugins/**/*.{js,ts}",
-    "./app.vue",
     "./error.vue",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {},
+    },
   },
   plugins: [],
-}
+};
