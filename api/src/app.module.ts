@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
+import { JwtModule } from '@nestjs/jwt';
 
 import db from './config/db';
 
@@ -20,6 +21,11 @@ import db from './config/db';
       host: db().database.host,
       logging: false,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
+    }),
+    JwtModule.register({
+      global: true,
+      secret: db().jwt,
+      signOptions: { expiresIn: '10000 days' },
     }),
     UsersModule,
     AuthModule,
