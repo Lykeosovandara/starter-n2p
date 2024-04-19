@@ -4,7 +4,8 @@
       <n-button class="mb-4">
         <NuxtLink to="user/add">ADD USER</NuxtLink>
       </n-button>
-      <n-data-table :columns="columns" :data="userValue" :pagination="pagination" class="pr-4" />
+      <n-data-table remote :columns="columns" :data="users" :pagination="pagination" class="pr-4"
+        @update:page="handlePageChange" :loading="loadingRef" />
     </n-card>
 
     <n-modal v-model:show="showQr">
@@ -20,29 +21,53 @@
 </template>
 
 <script lang="ts" setup>
-import { NDataTable, NButton, NCard, type DataTableColumns, NModal, useNotification, NAvatar } from "naive-ui";
-import { generateTokenBy, clearSessionBy } from "~/api";
+import { NDataTable, NButton, NCard, type DataTableColumns, NModal, useNotification, NAvatar, type PaginationProps } from "naive-ui";
+import { generateTokenBy, clearSessionBy, fetchUsers } from "~/api";
+import type { User } from "~/models";
 
 const { $i18n } = useNuxtApp();
 
 const showQrValue = ref<string>("");
+const loadingRef = ref(false);
 const showQr = ref<boolean>(false);
 
 const router = useRouter();
-const userValue = computed(() => usersStore.users);
+const users = ref<User[]>([]);
 
-const usersStore = useUsersStore();
-const pagination = usePagination(() => {
-  return usersStore.fetchUsers(pagination);
-});
+const pagination = reactive<Partial<PaginationProps>>({
+  pageSize: 9,
+  page: 1,
+  pageCount: 10,
+  prefix({ itemCount }) {
+    return `Total is ${itemCount}.`
+  }
+})
+
 
 definePageMeta({
   middleware: 'auth'
 })
 
 onMounted(() => {
-  usersStore.fetchUsers(pagination);
-})
+
+
+  getUsers();
+});
+// get user for table
+const getUsers = async () => {
+
+
+  loadingRef.value = true
+  const result = await fetchUsers({
+    page: pagination!.page!,
+    pageSize: pagination!.pageSize!,
+
+  });
+  users.value = result.data;
+  pagination.pageCount = result.meta!.pageCount;
+  pagination.itemCount = result.meta!.itemCount;
+  loadingRef.value = false
+}
 
 const columns: DataTableColumns = [
   {
@@ -156,7 +181,7 @@ const showModel = async (id: string) => {
 const clearSession = async (id: string) => {
   try {
     const result = await clearSessionBy(+id);
-    usersStore.fetchUsers(pagination);
+    getUsers();
     notification.success({
       content: $i18n.t("sessionCleared"),
       duration: 2500
@@ -168,6 +193,20 @@ const clearSession = async (id: string) => {
       duration: 2500
     })
   }
+}
+
+
+async function handlePageChange(currentPage: number) {
+  loadingRef.value = true
+  users.value = await fetchUsers({
+    page: pagination!.page!,
+    pageSize: pagination!.pageSize!,
+
+  });
+  pagination.page = currentPage;
+  pagination.pageCount = result.meta!.pageCount;
+  pagination.itemCount = result.meta!.itemCount;
+  loadingRef.value = false
 }
 
 </script>

@@ -32,6 +32,7 @@ export class AuthController {
     return this.authService.signIn(signInDto.username, signInDto.password);
   }
 
+  @Roles(Role.Admin)
   @HttpCode(HttpStatus.OK)
   @Post('register')
   register(@Body() signUpDto: SignUpDto, @Request() req) {
