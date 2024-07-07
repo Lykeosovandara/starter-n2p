@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200">
+  <!-- Vue.js logo (simplified) -->
+  <polygon points="150,20 120,70 180,70" fill="#41B883" />
+  <polygon points="150,20 135,45 165,45" fill="#35495E" />
+  
+  <!-- NestJS logo (simplified) -->
+  <path d="M90,100 L110,130 L130,100 Z" fill="#E0234E" />
+  <path d="M100,110 L110,130 L120,110 Z" fill="#FFFFFF" />
+  
+  <!-- PostgREST logo (simplified representation) -->
+  <rect x="170" y="100" width="40" height="30" fill="#0064a5" />
+  <text x="175" y="122" font-family="Arial" font-size="14" fill="white">REST</text>
+  
+  <!-- Connecting lines -->
+  <line x1="150" y1="70" x2="110" y2="100" stroke="#999999" stroke-width="2" />
+  <line x1="130" y1="100" x2="170" y2="115" stroke="#999999" stroke-width="2" />
+  
+  <!-- Package text -->
+  <text x="150" y="180" font-family="Arial" font-size="16" text-anchor="middle" fill="#333333">Starter Package</text>
+</svg>
