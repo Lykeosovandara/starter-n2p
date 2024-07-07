@@ -21,6 +21,10 @@ npm i
 ```
 ### Start the project 
 ```
-Docker composer 
+sh up-build.sh
+```
+
+```
+Docker composer up
 ```
 
